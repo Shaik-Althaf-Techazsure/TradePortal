@@ -6,9 +6,13 @@ This is a comprehensive full-stack web application designed to help users create
 
 **Features**
 1.**User Authentication:** Secure user registration and login system.
+
 2.**Company Search:** Search for companies by name, symbol, or scripcode.
+
 3.**Dynamic Wishlist:**  Add and remove companies from a personal watchlist.
+
 4.**MySQL Database:** All user and watchlist data is stored and managed in a persistent database.
+
 5.**Containerized Deployment:** The entire application is packaged with Docker for consistency across development and production environments.
 
 **Tech Stack**
