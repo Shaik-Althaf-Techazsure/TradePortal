@@ -1,4 +1,4 @@
-[![Trade Portal Live Demo](https://img.youtube.com/vi/3ZOv9Dc9c2o.jpg)](https://www.youtube.com/watch?v=3ZOv9Dc9c2o)
+[![Trade Portal Live Demo]](https://www.youtube.com/watch?v=3ZOv9Dc9c2o)
 
 **Trade Porta: A Backend Application using Django**
 
