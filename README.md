@@ -1,6 +1,6 @@
 [![Trade Portal Live Demo]](https://www.youtube.com/watch?v=3ZOv9Dc9c2o)
 
-**Trade Porta: A Backend Application using Django**
+****Trade Porta: A Backend Application using Django****
 
 This is a comprehensive full-stack web application designed to help users create and manage a personal stock watchlist. It showcases a modern development workflow from a Django backend and a front end to Docker containerization.
 
