@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .animate-spin-custom {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 min-h-screen antialiased text-slate-200">
+
+    <!-- Login Page -->
+    <div id="login-page" class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-slate-900 p-10 rounded-2xl shadow-2xl shadow-slate-900 w-full max-w-sm text-center border border-slate-700">
+            <h2 class="text-4xl font-extrabold text-white mb-6">Welcome Back</h2>
+            <form id="login-form" class="space-y-6">
+                <input type="text" id="login-username" placeholder="Username" class="w-full px-5 py-3 rounded-xl bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                <input type="password" id="login-password" placeholder="Password" class="w-full px-5 py-3 rounded-xl bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                <button type="submit" id="login-btn" class="w-full px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800">
+                    Login
+                </button>
+            </form>
+            <p id="login-message" class="mt-6 text-sm text-red-400 font-medium"></p>
+            <p class="mt-6 text-sm text-slate-400">
+                Don't have an account?
+                <a href="#" id="show-register" class="text-blue-400 hover:underline font-medium">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register-page" class="hidden flex items-center justify-center min-h-screen p-4">
+        <div class="bg-slate-900 p-10 rounded-2xl shadow-2xl shadow-slate-900 w-full max-w-sm text-center border border-slate-700">
+            <h2 class="text-4xl font-extrabold text-white mb-6">Create Account</h2>
+            <form id="register-form" class="space-y-6">
+                <input type="text" id="register-username" placeholder="Username" class="w-full px-5 py-3 rounded-xl bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                <input type="email" id="register-email" placeholder="Email" class="w-full px-5 py-3 rounded-xl bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                <input type="password" id="register-password" placeholder="Password" class="w-full px-5 py-3 rounded-xl bg-slate-800 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                <button type="submit" id="register-btn" class="w-full px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800">
+                    Register
+                </button>
+            </form>
+            <p id="register-message" class="mt-6 text-sm font-medium text-slate-300"></p>
+            <p class="mt-6 text-sm text-slate-400">
+                Already have an account?
+                <a href="#" id="show-login" class="text-blue-400 hover:underline font-medium">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="hidden p-8 max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <h1 class="text-4xl font-extrabold text-white mb-4 sm:mb-0">Market Dashboard</h1>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                <button id="show-watchlist-btn" class="px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 w-full sm:w-auto">
+                    View Watchlist
+                </button>
+                <button id="logout-btn-dashboard" class="px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto">
+                    Logout
+                </button>
+            </div>
+        </div>
+        <p id="dashboard-message" class="hidden bg-slate-800 text-blue-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium"></p>
+        <div id="dashboard-content" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        </div>
+    </div>
+
+    <!-- Watchlist Page -->
+    <div id="watchlist-page" class="hidden p-8 max-w-7xl mx-auto">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <h1 class="text-4xl font-extrabold text-white mb-4 sm:mb-0">Your Watchlist</h1>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+                <button id="show-dashboard-btn" class="px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 w-full sm:w-auto">
+                    Back to Dashboard
+                </button>
+                <button id="logout-btn-watchlist" class="px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto">
+                    Logout
+                </button>
+            </div>
+        </div>
+        <p id="watchlist-message" class="hidden bg-slate-800 text-blue-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium"></p>
+        <div id="watchlist-content" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        let accessToken = null;
+        let refreshToken = null;
+        let currentPage = 'login-page';
+        let isRefreshing = false;
+        let subscribers = [];
+
+        const pages = {
+            'login-page': document.getElementById('login-page'),
+            'register-page': document.getElementById('register-page'),
+            'dashboard-page': document.getElementById('dashboard-page'),
+            'watchlist-page': document.getElementById('watchlist-page')
+        };
+
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const showWatchlistBtn = document.getElementById('show-watchlist-btn');
+        const showDashboardBtn = document.getElementById('show-dashboard-btn');
+
+        function navigate(pageId) {
+            Object.values(pages).forEach(page => {
+                page.classList.add('hidden');
+                const messageElement = page.querySelector('[id$="-message"]');
+                if (messageElement) {
+                    messageElement.classList.add('hidden');
+                }
+            });
+            pages[pageId].classList.remove('hidden');
+            currentPage = pageId;
+        }
+
+        function setButtonLoading(button, isLoading, text) {
+            button.disabled = isLoading;
+            button.innerHTML = isLoading 
+                ? `<svg class="animate-spin-custom h-5 w-5 mr-3 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>${text}`
+                : text;
+        }
+
+        function subscribeTokenRefresh(cb) {
+            subscribers.push(cb);
+        }
+
+        function onTokenRefreshed(newAccessToken) {
+            subscribers.forEach(cb => cb(newAccessToken));
+            subscribers = [];
+        }
+
+        async function refreshTokenAndRetry(originalRequest) {
+            if (!refreshToken) {
+                console.error('No refresh token available. Logging out.');
+                logout();
+                return;
+            }
+
+            if (!isRefreshing) {
+                isRefreshing = true;
+                try {
+                    const response = await fetch(`${API_BASE_URL}/token/refresh/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ refresh: refreshToken })
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        accessToken = data.access;
+                        onTokenRefreshed(accessToken);
+                        isRefreshing = false;
+                    } else {
+                        throw new Error('Failed to refresh token');
+                    }
+                } catch (error) {
+                    console.error('Token refresh failed', error);
+                    logout();
+                    isRefreshing = false;
+                    return;
+                }
+            }
+            
+            return new Promise(resolve => {
+                subscribeTokenRefresh((newAccessToken) => {
+                    const newRequest = originalRequest.clone();
+                    newRequest.headers.set('Authorization', `Bearer ${newAccessToken}`);
+                    resolve(fetch(newRequest));
+                });
+            });
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const request = new Request(url, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            
+            let response = await fetch(request);
+
+            if (response.status === 401 && refreshToken) {
+                console.warn("Access token expired, attempting to refresh...");
+                response = await refreshTokenAndRetry(request);
+            }
+
+            return response;
+        }
+
+        async function fetchPublic(url, data) {
+            const request = new Request(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            return fetch(request);
+        }
+
+        document.getElementById('show-register').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigate('register-page');
+        });
+
+        document.getElementById('show-login').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigate('login-page');
+        });
+
+        document.getElementById('show-watchlist-btn').addEventListener('click', () => {
+            navigate('watchlist-page');
+            fetchWatchlist();
+        });
+
+        document.getElementById('show-dashboard-btn').addEventListener('click', () => {
+            navigate('dashboard-page');
+            fetchAllCompanies();
+        });
+
+        function logout() {
+            accessToken = null;
+            refreshToken = null;
+            navigate('login-page');
+            const loginMessage = document.getElementById('login-message');
+            loginMessage.textContent = 'You have been logged out.';
+            loginMessage.className = 'mt-6 text-sm text-blue-400 font-medium';
+        }
+        document.getElementById('logout-btn-dashboard').addEventListener('click', logout);
+        document.getElementById('logout-btn-watchlist').addEventListener('click', logout);
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const messageElement = document.getElementById('login-message');
+            messageElement.textContent = '';
+            
+            setButtonLoading(loginBtn, true, 'Logging in...');
+
+            try {
+                const response = await fetchPublic(`${API_BASE_URL}/login/`, { username, password });
+                const data = await response.json();
+                if (response.ok) {
+                    accessToken = data.access;
+                    refreshToken = data.refresh;
+                    navigate('dashboard-page');
+                    fetchAllCompanies();
+                } else {
+                    messageElement.textContent = data.detail || 'Login failed. Please check your credentials.';
+                    messageElement.className = 'mt-6 text-sm text-red-400 font-medium';
+                }
+            } catch (error) {
+                console.error('Login failed:', error);
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.className = 'mt-6 text-sm text-red-400 font-medium';
+            } finally {
+                setButtonLoading(loginBtn, false, 'Login');
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const messageElement = document.getElementById('register-message');
+            messageElement.textContent = '';
+            
+            setButtonLoading(registerBtn, true, 'Registering...');
+
+            try {
+                const response = await fetchPublic(`${API_BASE_URL}/register/`, { username, email, password });
+                const data = await response.json();
+                if (response.ok) {
+                    messageElement.textContent = 'Registration successful! Please log in.';
+                    messageElement.className = 'mt-6 text-sm text-blue-400 font-medium';
+                    setTimeout(() => navigate('login-page'), 2000); // Navigate to login after a brief delay
+                } else {
+                    let errorMessage = data.detail || 'Registration failed.';
+                    if (data.username && data.username.length > 0) {
+                        errorMessage = `Username: ${data.username[0]}`;
+                    } else if (data.password && data.password.length > 0) {
+                        errorMessage = `Password: ${data.password[0]}`;
+                    } else if (data.email && data.email.length > 0) {
+                        errorMessage = `Email: ${data.email[0]}`;
+                    }
+                    messageElement.textContent = errorMessage;
+                    messageElement.className = 'mt-6 text-sm text-red-400 font-medium';
+                }
+            } catch (error) {
+                console.error('Registration failed:', error);
+                messageElement.textContent = 'An error occurred. Please try again.';
+                messageElement.className = 'mt-6 text-sm text-red-400 font-medium';
+            } finally {
+                setButtonLoading(registerBtn, false, 'Register');
+            }
+        });
+
+        async function fetchAllCompanies() {
+            const dashboardContent = document.getElementById('dashboard-content');
+            const dashboardMessage = document.getElementById('dashboard-message');
+            dashboardContent.innerHTML = `<p class="text-center text-lg text-slate-400 font-medium">Loading companies...</p>`;
+            dashboardMessage.classList.add('hidden');
+            setButtonLoading(showDashboardBtn, true, 'Loading...');
+            setButtonLoading(showWatchlistBtn, true, 'View Watchlist');
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/companies/`, { method: 'GET' });
+                
+                console.log('Fetching companies from:', `${API_BASE_URL}/companies/`);
+                console.log('Response status:', response.status);
+                
+                if (response.ok) {
+                    const companies = await response.json();
+                    console.log('Received companies data:', companies);
+                    renderCompanies(companies);
+                } else {
+                    const errorData = await response.json();
+                    console.error('Failed to fetch companies. Server response:', errorData);
+                    dashboardContent.innerHTML = `<p class="text-center text-lg text-red-400 font-medium">Failed to fetch companies. Please refresh.</p>`;
+                }
+            } catch (error) {
+                console.error('Failed to fetch companies:', error);
+                dashboardContent.innerHTML = `<p class="text-center text-lg text-red-400 font-medium">An error occurred. Please try again.</p>`;
+            } finally {
+                setButtonLoading(showDashboardBtn, false, 'Back to Dashboard');
+                setButtonLoading(showWatchlistBtn, false, 'View Watchlist');
+            }
+        }
+
+        function renderCompanies(companies) {
+            const dashboardContent = document.getElementById('dashboard-content');
+            dashboardContent.innerHTML = '';
+            if (companies.length === 0) {
+                dashboardContent.innerHTML = `<p class="text-center text-lg text-slate-400 font-medium">No companies found.</p>`;
+                return;
+            }
+            companies.forEach(company => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800 flex flex-col items-start transition-transform duration-300 hover:scale-105";
+                card.innerHTML = `
+                    <h2 class="text-3xl font-bold text-white mb-2">${company.symbol}</h2>
+                    <p class="text-lg text-slate-400">${company.company_name}</p>
+                    <p class="text-4xl font-extrabold text-green-500 mb-6">${company.scripcode}</p>
+                    <div class="flex space-x-3 mt-auto w-full">
+                        <button class="add-to-watchlist-btn flex-1 px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" data-ticker="${company.symbol}">Add</button>
+                    </div>
+                `;
+                dashboardContent.appendChild(card);
+            });
+
+            document.querySelectorAll('.add-to-watchlist-btn').forEach(button => {
+                button.addEventListener('click', (e) => handleAddRemove(e.target.dataset.ticker, 'add'));
+            });
+        }
+
+        async function handleAddRemove(ticker, action) {
+            const dashboardMessage = document.getElementById('dashboard-message');
+            dashboardMessage.classList.remove('hidden');
+            dashboardMessage.textContent = 'Updating watchlist...';
+            dashboardMessage.className = 'bg-slate-800 text-slate-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+
+            const endpoint = action === 'add' ? 'add/' : 'remove/';
+            const url = `${API_BASE_URL}/watchlist/${endpoint}`;
+            
+            try {
+                const response = await fetchWithAuth(url, { method: 'POST', body: JSON.stringify({ ticker }) });
+
+                const data = await response.json();
+                if (response.ok) {
+                    dashboardMessage.textContent = data.message;
+                    dashboardMessage.className = 'bg-slate-800 text-blue-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+                } else {
+                    let errorMessage = data.detail || `Error: ${response.status} ${response.statusText}`;
+                    if (data.ticker) {
+                        errorMessage = `Ticker error: ${data.ticker[0]}`;
+                    }
+                    dashboardMessage.textContent = errorMessage;
+                    dashboardMessage.className = 'bg-slate-800 text-red-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+                }
+            } catch (error) {
+                console.error('Failed to update watchlist:', error);
+                dashboardMessage.textContent = 'An network error occurred. Please try again.';
+                dashboardMessage.className = 'bg-slate-800 text-red-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+            }
+        }
+        async function fetchWatchlist() {
+            const watchlistContent = document.getElementById('watchlist-content');
+            const watchlistMessage = document.getElementById('watchlist-message');
+            watchlistContent.innerHTML = `<p class="text-center text-lg text-slate-400 font-medium">Loading watchlist...</p>`;
+            watchlistMessage.classList.add('hidden');
+            setButtonLoading(showWatchlistBtn, true, 'Loading...');
+            setButtonLoading(showDashboardBtn, true, 'Back to Dashboard');
+
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/watchlist/`, { method: 'GET' });
+                if (response.ok) {
+                    const watchlist = await response.json();
+                    renderWatchlist(watchlist);
+                } else {
+                    watchlistContent.innerHTML = `<p class="text-center text-lg text-red-400 font-medium">Failed to fetch watchlist.</p>`;
+                }
+            } catch (error) {
+                console.error('Failed to fetch watchlist:', error);
+                watchlistContent.innerHTML = `<p class="text-center text-lg text-red-400 font-medium">An error occurred. Please try again.</p>`;
+            } finally {
+                setButtonLoading(showWatchlistBtn, false, 'View Watchlist');
+                setButtonLoading(showDashboardBtn, false, 'Back to Dashboard');
+            }
+        }
+
+        function renderWatchlist(watchlist) {
+            const watchlistContent = document.getElementById('watchlist-content');
+            watchlistContent.innerHTML = '';
+            if (watchlist.length === 0) {
+                watchlistContent.innerHTML = `<p class="text-center text-lg text-slate-400 font-medium">Your watchlist is empty.</p>`;
+                return;
+            }
+            watchlist.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800 flex flex-col items-start transition-transform duration-300 hover:scale-105";
+                card.innerHTML = `
+                    <h2 class="text-3xl font-bold text-white mb-2">${item.symbol}</h2>
+                    <p class="text-lg text-slate-400">${item.company_name}</p>
+                    <p class="text-4xl font-extrabold text-green-500 mb-6">${item.scripcode}</p>
+                    <button class="remove-btn mt-auto w-full px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 shadow-lg bg-red-600 text-white hover:bg-red-700" data-ticker="${item.symbol}">
+                        Remove
+                    </button>
+                `;
+                watchlistContent.appendChild(card);
+            });
+
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', (e) => handleRemoveFromWatchlist(e.target.dataset.ticker));
+            });
+        }
+
+        async function handleRemoveFromWatchlist(ticker) {
+            const watchlistMessage = document.getElementById('watchlist-message');
+            watchlistMessage.classList.remove('hidden');
+            watchlistMessage.textContent = 'Removing from watchlist...';
+            watchlistMessage.className = 'bg-slate-800 text-slate-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/watchlist/remove/`, { method: 'POST', body: JSON.stringify({ ticker }) });
+
+                const data = await response.json();
+                if (response.ok) {
+                    watchlistMessage.textContent = data.message;
+                    watchlistMessage.className = 'bg-slate-800 text-blue-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+                    fetchWatchlist(); // Re-fetch watchlist to update the UI
+                } else {
+                    watchlistMessage.textContent = data.detail || 'Failed to remove item.';
+                    watchlistMessage.className = 'bg-slate-800 text-red-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+                }
+            } catch (error) {
+                console.error('Failed to remove from watchlist:', error);
+                watchlistMessage.textContent = 'An error occurred. Please try again.';
+                watchlistMessage.className = 'bg-slate-800 text-red-400 p-3 rounded-xl text-sm mb-6 border border-slate-700 font-medium';
+            }
+        }
+    </script>
+</body>
+</html>
