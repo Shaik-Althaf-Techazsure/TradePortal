@@ -5,6 +5,7 @@
 This is a comprehensive full-stack web application designed to help users create and manage a personal stock watchlist. It showcases a modern development workflow from a Django backend and a front end to Docker containerization.
 
 **Features**
+
 1.**User Authentication:** Secure user registration and login system.
 
 2.**Company Search:** Search for companies by name, symbol, or scripcode.
@@ -16,65 +17,107 @@ This is a comprehensive full-stack web application designed to help users create
 5.**Containerized Deployment:** The entire application is packaged with Docker for consistency across development and production environments.
 
 **Tech Stack**
+
 1.**Backend:** Python, Django, Django REST Framework
+
 2.**Database:** MySQL
+
 3.**Frontend:** HTML, CSS, JavaScript
+
 4.**Deployment:** Docker, Docker Compose
 
 **Installation & Deployment**
+
 This project is designed to be run entirely with Docker and Docker Compose. No local dependencies for Django or MySQL are required.
 
-
 1.**Clone the Repository**
+
 Start by cloning the project to your local machine:
+
 git clone https://github.com/Shaik-Althaf-TechAZsure/TradePortal.git
+
 cd TradePortal
 
 2.**The Docker Environment**
+
 The project's deployment is defined by the following files:
+
 "start.sh"
+
 this script handles the server startup and database migrations.
+
 "python manage.py makemigrations TradePortal
+
 python manage.py migrate
+
 gunicorn --bind 0.0.0.0:8000 TradePortal.wsgi --workers 4"
 
 "docker-compose.yml"
+
 This file orchestrates the django and MySql services, connecting them in a single network.
 
 version: '3.8'
 
 services:
+
   web:
+  
     build: .
+    
     command: sh -c "./start.sh"
+    
     volumes:
+    
       - .:/code
+      
     ports:
+    
       - "8000:8000"
+      
     depends_on:
+    
       - db
+
     environment:
+    
       - MYSQL_DATABASE=${MYSQL_DATABASE}
+      
       - MYSQL_USER=${MYSQL_USER}
+      
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      
       - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
 
   db:
+  
     image: mysql:8.0
+    
     container_name: mysql_db
+    
     restart: always
+    
     environment:
+    
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+      
       MYSQL_USER: ${MYSQL_USER}
+      
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      
     ports:
+    
       - "3306:3306"
+      
     volumes:
+    
       - ./data/mysql:/var/lib/mysql
 
 3.**Build and Run**
+
 To build the Docker images and start the services, run the following command. The -d flag runs the containers in detached mode.
 
 "docker-compose up -d --build"
@@ -83,6 +126,7 @@ To build the Docker images and start the services, run the following command. Th
 
 
 **API Endpoints(with Postman)**
+
 All backend interactions are handled through a RESTful API. Below are examples of the main endpoints and their responses, as shown in Postman.
 
 1.**Register API**
